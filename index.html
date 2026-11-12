@@ -446,7 +446,7 @@ document.addEventListener('contextmenu',function(e){if(e.target.closest&&e.targe
 function delAccById(id){var a=S.accounts.find(function(x){return x.id===id});if(a)S.trash.unshift({kind:'acc',item:a});S.accounts=S.accounts.filter(function(x){return x.id!==id});save();modal=null;render();toast('نُقل إلى سلة المحذوفات')}
 render();
 
-var APP_BUILD=1,APP_VER='1.0',UPD_SKIP=0;
+var APP_BUILD=2,APP_VER='1.1',UPD_SKIP=0;
 function checkUpdate(){
  if(!/^https?:$/.test(location.protocol)||document.getElementById('upd'))return;
  fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(v){
