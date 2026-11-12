@@ -162,6 +162,13 @@ td{padding:1px 2px}
 td.d{font-size:10px}
 td.n{font-size:11px}
 table{border-spacing:0 3px}
+.lkcard{width:100%;max-width:340px;display:flex;flex-direction:column;gap:10px}
+.lkcard input{max-width:none;width:100%;text-align:center}
+.lkh{margin:0;text-align:center;font-size:20px}
+.lkp{margin:0;text-align:center;font-size:14px;color:var(--mu);line-height:1.8}
+.lkhr{border:0;border-top:1px solid var(--ln);width:100%;margin:2px 0}
+.lklink{color:var(--ac);font-weight:700;padding:8px;text-align:center}
+.acts[style*="wrap"] button{flex:1 1 42%}
 @media print{header,.foot,.bar2 button,.plus,.chev,.fab{display:none!important}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
@@ -317,13 +324,14 @@ function modalH(){var m=modal,v=function(k){return esc(m[k]==null?'':m[k])};
   if(m.t==='emptyt')return '<div class="ov"><div class="dlg"><h2>إفراغ السلة</h2><p style="text-align:center">سيُحذف كل ما في السلة ('+S.trash.length+' عنصر) نهائيًا ولا يمكن استرجاعه. هل أنت متأكد؟</p><div class="acts"><button class="dg" onclick="S.trash=[];save();modal={t:\'trash\'};render()">نعم، أفرغ</button><button class="gh" onclick="modal={t:\'trash\'};render()">إلغاء</button></div></div></div>';
   if(m.t==='accact'){var a0=S.accounts.find(function(x){return x.id===m.id});if(!a0)return '';
    return '<div class="ov"><div class="dlg"><h2>'+esc(a0.name)+'</h2><p style="text-align:center;font-size:13px;color:var(--mu);margin:4px 0 10px">سينتقل الحساب إلى سلة المحذوفات ويمكنك استرجاعه.</p><div class="acts" style="flex-direction:column"><button class="dg" onclick="delAccById(\''+a0.id+'\')">'+ic('trash')+' حذف الحساب</button><button class="gh" onclick="modal=null;render()">إلغاء</button></div></div></div>'}
+  if(m.t==='rc')return '<div class="ov"><div class="dlg"><h2>كود الاسترجاع</h2><p style="text-align:center;font-size:14px;line-height:1.8">احفظ هذا الكود في مكان آمن. به تستعيد الدخول إن نسيت كلمة المرور، ولن يظهر مرة أخرى.</p><div style="direction:ltr;text-align:center;font-size:26px;font-weight:700;letter-spacing:2px;padding:14px 6px;margin:10px 0;border-radius:12px;background:var(--bg);box-shadow:inset 0 2px 5px rgba(0,0,0,.2);-webkit-user-select:all;user-select:all">'+esc(m.code)+'</div><div class="acts"><button onclick="copyCode()">نسخ الكود</button><button onclick="modal=null;render()">حفظت الكود</button></div></div></div>';
   if(m.t==='set')return '<div class="ov"><div class="dlg"><h2>الإعدادات</h2><label>تغيير عبارة (مدين)</label><input id="f_lon" maxlength="20" value="'+esc(S.labels.on)+'"><label>تغيير عبارة (دائن)</label><input id="f_lfr" maxlength="20" value="'+esc(S.labels.fr)+'"><p style="font-size:12px;color:var(--mu)">تظهر العبارتان في القيود والإجمالي والتقارير. الافتراضي: عليه / له.</p><div class="acts"><button onclick="saveSet()">حفظ</button><button class="gh" onclick="resetSet()">الافتراضي</button><button class="gh" onclick="modal=null;render()">إغلاق</button></div></div></div>';
   if(m.t==='about')return '<div class="ov"><div class="dlg"><h2>حول التطبيق</h2><div style="text-align:center;line-height:2.1"><div style="font-size:44px">'+ic('book')+'</div><b>دفتر الحسابات</b><br>الإصدار '+APP_VER+'<br>تطبيق لتسجيل الديون والقيود بين الأشخاص<br><span style="color:var(--mu)">المطوّر</span><br><b>رحمة الله فضل المولى</b></div><div class="acts"><button class="gh" onclick="modal=null;render()">إغلاق</button></div></div></div>';
   if(m.t==='sv'){var b0=svBlob(),pk=!!window.showSaveFilePicker,sh=false;try{sh=!!(navigator.share&&svFile(b0,PEND.fn,b0.type||'application/octet-stream'))}catch(e){}
    return '<div class="ov"><div class="dlg"><h2>'+(PEND.json?'تصدير البيانات':'حفظ التقرير')+'</h2><p style="text-align:center;font-size:14px;margin:4px 0 10px">اختر طريقة الحفظ:</p><div class="acts" style="flex-direction:column">'+(pk?'<button onclick="svDo(\'picker\')">اختيار مكان الحفظ</button>':'')+(sh?'<button onclick="svDo(\'share\')">مشاركة / حفظ في الملفات</button>':'')+'<button onclick="svDo(\'dl\')">حفظ في مجلد التنزيلات</button>'+(PEND.json?'<button onclick="svDo(\'copy\')">نسخ النص</button>':'')+'<button class="gh" onclick="modal=null;render()">إغلاق</button></div></div></div>'}
   if(m.t==='rep')return '<div class="ov"><div class="dlg"><h2>تقرير '+(view==='acc'?'الحساب':'الحسابات')+'</h2><div class="acts" style="flex-direction:column"><button onclick="savePdf()">'+ic('save')+' حفظ في ملف PDF</button><button onclick="shareReport()">'+ic('share')+' مشاركة التقرير</button><button class="gh" onclick="modal=null;render()">إغلاق</button></div></div></div>';
   if(m.t==='imp')return '<div class="ov"><div class="dlg"><h2>استيراد من ملف JSON</h2><p style="text-align:center">سيُستبدل محتوى الدفتر الحالي بمحتوى الملف.</p><input id="jf" type="file" accept=".json,application/json"><div class="acts"><button onclick="importJson()">استيراد</button><button class="gh" onclick="modal=null;render()">إلغاء</button></div></div></div>';
-  if(m.t==='lock')return '<div class="ov"><div class="dlg"><h2>قفل التطبيق</h2>'+(S.lock?'<label>كلمة المرور الحالية</label><input id="f_pw0" type="password">':'')+'<label>'+(S.lock?'كلمة المرور الجديدة':'كلمة المرور')+'</label><input id="f_pw1" type="password"><label>تأكيد كلمة المرور</label><input id="f_pw2" type="password"><p style="font-size:12px;color:var(--mu)">يطلب التطبيق كلمة المرور عند كل فتح على هذا الجهاز. لا يمكن استعادتها إن نسيتها، فاحتفظ بنسخة JSON.</p><div class="acts"><button onclick="setLock()">حفظ</button>'+(S.lock?'<button onclick="lockNow()">قفل الآن</button><button class="dg" onclick="removeLock()">إلغاء القفل</button>':'')+'<button class="gh" onclick="modal=null;render()">إغلاق</button></div></div></div>';
+  if(m.t==='lock')return '<div class="ov"><div class="dlg"><h2>قفل التطبيق</h2>'+(S.lock?'<label>كلمة المرور الحالية</label><input id="f_pw0" type="password">':'')+'<label>'+(S.lock?'كلمة المرور الجديدة':'كلمة المرور')+'</label><input id="f_pw1" type="password"><label>تأكيد كلمة المرور</label><input id="f_pw2" type="password"><p style="font-size:12px;color:var(--mu)">يطلب التطبيق كلمة المرور عند كل فتح على هذا الجهاز. لا يمكن استعادتها إن نسيتها، فاحتفظ بنسخة JSON.</p><div class="acts" style="flex-wrap:wrap"><button onclick="setLock()">حفظ</button>'+(S.lock?'<button onclick="lockNow()">قفل الآن</button><button onclick="newCodeNow()">كود استرجاع جديد</button><button class="dg" onclick="removeLock()">إلغاء القفل</button>':'')+'<button class="gh" onclick="modal=null;render()">إغلاق</button></div></div></div>';
   if(m.t==='trash')return '<div class="ov"><div class="dlg"><h2>سلة المحذوفات</h2>'+(S.trash.length?S.trash.map(function(t,i){return '<div class="row"><span class="nm">'+(t.kind==='acc'?esc(t.item.name)+' ('+t.item.entries.length+' قيد)':esc(t.accName)+': '+fmt(t.item.amt)+' '+(t.item.type==='on'?esc(S.labels.on):esc(S.labels.fr)))+'</span><button class="ib" style="color:var(--ac)" aria-label="استرجاع" onclick="restoreT('+i+')">'+ic('undo')+'</button><button class="ib" style="color:var(--on)" aria-label="حذف نهائي" onclick="purgeT('+i+')">'+ic('x')+'</button></div>'}).join(''):'<div class="empty">السلة فارغة</div>')+'<div class="acts">'+(S.trash.length?'<button class="dg" onclick="modal={t:\'emptyt\'};render()">إفراغ السلة</button>':'')+'<button class="gh" onclick="modal=null;render()">إغلاق</button></div></div></div>';
   if(m.t==='bak')return '<div class="ov"><div class="dlg"><h2>نسخ احتياطي واسترجاع</h2><label>انسخ هذا النص واحفظه في مكان آمن</label><textarea id="bk" rows="5" readonly>'+esc(JSON.stringify(exportObj()))+'</textarea>'+
    '<div class="acts"><button onclick="copyBk()">نسخ</button></div><label>للاسترجاع: الصق النص هنا</label><textarea id="rs" rows="4"></textarea>'+
@@ -363,12 +371,45 @@ function exportJson(){openSave('daftar-'+today()+'.json',JSON.stringify(exportOb
 function importJson(){var f=document.getElementById('jf').files[0];if(!f){toast('اختر ملفًا أولًا');return}
   var r=new FileReader();r.onload=function(){try{var p=JSON.parse(r.result);if(!Array.isArray(p.accounts)||!Array.isArray(p.currencies))throw 0;p.lock=S.lock;if(!p.labels)p.labels=S.labels;if(!p.trash)p.trash=[];if(!p.cur)p.cur=p.currencies[0];if(!p.theme)p.theme=S.theme;S=p;save();modal=null;view='home';render();toast('تم الاستيراد')}catch(e){toast('الملف غير صالح')}};r.onerror=function(){toast('تعذرت قراءة الملف')};r.readAsText(f)}
 function hashPw(p,salt){var s=salt+':'+p;if(window.crypto&&crypto.subtle&&window.TextEncoder){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)).then(function(b){return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0')}).join('')})}var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return Promise.resolve('x'+h)}
-function lockH(){return '<div class="lockscr"><div style="font-size:48px">'+ic('lock')+'</div><h2 style="margin:0">دفتر الحسابات</h2><input id="lp" type="password" placeholder="كلمة المرور" onkeydown="if(event.key===\'Enter\')unlock()"><div class="acts" style="width:100%;max-width:280px"><button onclick="unlock()">فتح</button></div></div>'}
-function unlock(){var v=document.getElementById('lp').value;hashPw(v,S.lock.salt).then(function(h){if(h===S.lock.hash){locked=false;render()}else{toast('كلمة المرور غير صحيحة')}})}
+var LK={mode:'login'};
+function genCode(){var A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',o='',b=new Uint8Array(12),i;try{crypto.getRandomValues(b)}catch(e){for(i=0;i<12;i++)b[i]=Math.floor(Math.random()*256)}for(i=0;i<12;i++){o+=A[b[i]%32];if(i%4===3&&i<11)o+='-'}return o}
+function nrmCode(v){return String(v).replace(/[\u0660-\u0669]/g,function(d){return d.charCodeAt(0)-1632}).toUpperCase().replace(/[^A-Z0-9]/g,'')}
+function newRecovery(cb){var code=genCode(),salt=uid();hashPw(nrmCode(code),salt).then(function(h){S.lock.rs=salt;S.lock.rh=h;save();cb(code)})}
+function showCode(code){modal={t:'rc',code:code};render()}
+function copyCode(){var t=document.createElement('textarea');t.value=modal.code;document.body.appendChild(t);t.select();try{document.execCommand('copy');toast('تم نسخ الكود')}catch(e){toast('تعذر النسخ')}t.remove()}
+function newCodeNow(){var c=document.getElementById('f_pw0');hashPw(c?c.value:'',S.lock.salt).then(function(h){if(h!==S.lock.hash){toast('اكتب كلمة المرور الحالية أولًا');return}newRecovery(function(code){showCode(code)})})}
+function pwOK(a,b){if(a.length<4){toast('كلمة المرور 4 أحرف على الأقل');return false}if(a!==b){toast('كلمتا المرور غير متطابقتين');return false}return true}
+function resetPw(n){var salt=uid();hashPw(n,salt).then(function(h){S.lock.salt=salt;S.lock.hash=h;delete S.lock.wait;newRecovery(function(code){locked=false;LK.mode='login';render();showCode(code)})})}
+function recoverByCode(){var code=nrmCode(document.getElementById('rc').value),n=document.getElementById('rp1').value,n2=document.getElementById('rp2').value;
+ if(!code){toast('اكتب كود الاسترجاع');return}if(!pwOK(n,n2))return;
+ hashPw(code,S.lock.rs||'').then(function(h){if(!S.lock.rh||h!==S.lock.rh){toast('كود الاسترجاع غير صحيح');return}resetPw(n)})}
+function recoverByWait(){var n=document.getElementById('rp1').value,n2=document.getElementById('rp2').value;
+ if(!S.lock.wait||Date.now()-S.lock.wait<864e5){toast('لم تنتهِ فترة الانتظار بعد');render();return}if(!pwOK(n,n2))return;resetPw(n)}
+function startWait(){S.lock.wait=Date.now();save();render();toast('بدأت فترة الانتظار')}
+function lockH(){
+ var L=S.lock||{},h='<div class="lockscr"><div class="lkcard">';
+ if(LK.mode==='login'){
+  h+='<div style="font-size:48px;text-align:center">'+ic('lock')+'</div><h2 class="lkh">دفتر الحسابات</h2><input id="lp" type="password" placeholder="كلمة المرور" onkeydown="if(event.key===\'Enter\')unlock()"><div class="acts"><button onclick="unlock()">فتح</button></div><button class="lklink" onclick="LK.mode=\'recover\';render()">نسيت كلمة المرور؟</button>'}
+ else{
+  var left=L.wait?L.wait+864e5-Date.now():0,ready=!!L.wait&&left<=0;
+  h+='<h2 class="lkh">استعادة الدخول</h2>';
+  if(!ready){
+   h+='<p class="lkp">اكتب كود الاسترجاع وكلمة مرور جديدة. لن يُحذف أي شيء من بياناتك.</p><input id="rc" placeholder="كود الاسترجاع" dir="ltr" autocapitalize="characters" autocomplete="off"><input id="rp1" type="password" placeholder="كلمة المرور الجديدة"><input id="rp2" type="password" placeholder="أعد كتابة الجديدة"><div class="acts"><button onclick="recoverByCode()">استعادة الدخول</button></div><hr class="lkhr">';
+   if(L.wait){var hh=Math.floor(left/36e5),mm=Math.ceil((left%36e5)/6e4);h+='<p class="lkp">بدأت فترة الانتظار. يمكنك إعادة تعيين كلمة المرور بعد '+hh+' ساعة و'+mm+' دقيقة تقريبًا.</p>'}
+   else h+='<p class="lkp">ضيّعت الكود أيضًا؟ يمكنك استعادة الدخول بعد فترة انتظار 24 ساعة، ولن يُحذف أي شيء من بياناتك.</p><div class="acts"><button class="gh" onclick="startWait()">ابدأ فترة الانتظار</button></div>'}
+  else h+='<p class="lkp">انتهت فترة الانتظار. اكتب كلمة مرور جديدة.</p><input id="rp1" type="password" placeholder="كلمة المرور الجديدة"><input id="rp2" type="password" placeholder="أعد كتابة الجديدة"><div class="acts"><button onclick="recoverByWait()">إعادة تعيين كلمة المرور</button></div>';
+  h+='<div class="acts"><button class="gh" onclick="LK.mode=\'login\';render()">رجوع</button></div>'}
+ return h+'</div></div>'}
+function unlock(){var v=document.getElementById('lp').value;hashPw(v,S.lock.salt).then(function(h){
+ if(h===S.lock.hash){locked=false;LK.mode='login';if(S.lock.wait){delete S.lock.wait;save()}render();if(!S.lock.rh){newRecovery(function(code){showCode(code)})}}
+ else{toast('كلمة المرور غير صحيحة')}})}
 function lockNow(){modal=null;locked=true;render()}
 function setLock(){var c=document.getElementById('f_pw0'),n=document.getElementById('f_pw1').value,n2=document.getElementById('f_pw2').value;
-  function go2(){if(n.length<4){toast('كلمة المرور 4 أحرف على الأقل');return}if(n!==n2){toast('كلمتا المرور غير متطابقتين');return}var salt=uid();hashPw(n,salt).then(function(h){S.lock={salt:salt,hash:h};save();modal=null;render();toast('تم تفعيل القفل')})}
-  if(S.lock){hashPw(c?c.value:'',S.lock.salt).then(function(h){if(h!==S.lock.hash){toast('كلمة المرور الحالية غير صحيحة');return}go2()})}else go2()}
+ function go2(){if(!pwOK(n,n2))return;var salt=uid(),old=S.lock;hashPw(n,salt).then(function(h){
+  S.lock={salt:salt,hash:h};
+  if(old&&old.rh){S.lock.rh=old.rh;S.lock.rs=old.rs;save();modal=null;render();toast('تم تغيير كلمة المرور');return}
+  newRecovery(function(code){showCode(code)})})}
+ if(S.lock){hashPw(c?c.value:'',S.lock.salt).then(function(h){if(h!==S.lock.hash){toast('كلمة المرور الحالية غير صحيحة');return}go2()})}else go2()}
 function removeLock(){var c=document.getElementById('f_pw0');hashPw(c?c.value:'',S.lock.salt).then(function(h){if(h!==S.lock.hash){toast('كلمة المرور الحالية غير صحيحة');return}delete S.lock;save();modal=null;render();toast('تم إلغاء القفل')})}
 function saveSet(){var a=document.getElementById('f_lon').value.trim(),b=document.getElementById('f_lfr').value.trim();if(!a||!b){toast('اكتب العبارتين');return}if(a===b){toast('يجب أن تختلف العبارتان');return}S.labels={on:a,fr:b};save();modal=null;render();toast('تم الحفظ')}
 function resetSet(){S.labels={on:'عليه',fr:'له'};save();modal=null;render()}
@@ -446,7 +487,7 @@ document.addEventListener('contextmenu',function(e){if(e.target.closest&&e.targe
 function delAccById(id){var a=S.accounts.find(function(x){return x.id===id});if(a)S.trash.unshift({kind:'acc',item:a});S.accounts=S.accounts.filter(function(x){return x.id!==id});save();modal=null;render();toast('نُقل إلى سلة المحذوفات')}
 render();
 
-var APP_BUILD=2,APP_VER='1.1',UPD_SKIP=0;
+var APP_BUILD=3,APP_VER='1.2',UPD_SKIP=0;
 function checkUpdate(){
  if(!/^https?:$/.test(location.protocol)||document.getElementById('upd'))return;
  fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(v){
