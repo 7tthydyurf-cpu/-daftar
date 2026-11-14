@@ -169,6 +169,33 @@ table{border-spacing:0 3px}
 .lkhr{border:0;border-top:1px solid var(--ln);width:100%;margin:2px 0}
 .lklink{color:var(--ac);font-weight:700;padding:8px;text-align:center}
 .acts[style*="wrap"] button{flex:1 1 42%}
+.dlg.cm{padding:10px;max-width:420px}
+.mh{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.mt{flex:1;text-align:center;font-weight:700;color:#fff;background:var(--g);border-radius:10px;padding:10px 6px;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 3px 0 var(--b4)}
+.mhb{width:38px;height:38px;border-radius:10px;color:var(--ac);display:grid;place-items:center}
+.fr2{display:flex;align-items:center;gap:8px;margin:8px 0}
+.fr2 input{flex:1;min-width:0;height:44px;margin:0;text-align:center}
+.fi{width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;color:var(--ac);background:var(--card);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 3px 0 var(--ln),0 5px 8px -3px rgba(0,0,0,.4)}
+.fi:active{transform:translateY(2px);box-shadow:none}
+.th{width:44px;height:44px;flex:none;border-radius:8px;overflow:hidden;padding:0;border:2px solid var(--ac)}
+.th img{width:100%;height:100%;object-fit:cover;display:block}
+.fcur{display:flex;align-items:center;gap:8px;margin:8px 0}
+.fcur span{font-weight:700;font-size:16px;min-width:56px}
+.cpill{flex:1;position:relative;background:var(--bg);border-radius:10px;box-shadow:inset 0 2px 4px rgba(0,0,0,.15)}
+.cpill select{width:100%;height:44px;margin:0;border:0;background:transparent;box-shadow:none;text-align:center;text-align-last:center;-webkit-appearance:none;appearance:none;font-weight:700}
+.cpill .ic{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--ac);pointer-events:none}
+.fdate input{width:100%;height:44px;text-align:center;margin:8px 0}
+.fbar{display:flex;align-items:center;gap:10px;margin-top:10px}
+.rb{display:flex;align-items:center;gap:6px;font-weight:700;font-size:16px;padding:6px 2px}
+.rb i{width:22px;height:22px;border-radius:50%;border:2px solid;display:inline-block;position:relative;flex:none}
+.rb.on i{border-color:var(--on)}.rb.fr i{border-color:var(--fr)}
+.rb.sel i::after{content:"";position:absolute;inset:3px;border-radius:50%}
+.rb.on.sel i::after{background:var(--on)}.rb.fr.sel i::after{background:var(--fr)}
+.sb{width:46px;height:42px;border-radius:10px;display:grid;place-items:center;color:#fff;background:var(--g);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 3px 0 var(--b4),0 6px 8px -4px rgba(0,50,90,.5)}
+.sb:active{transform:translateY(3px);box-shadow:none}
+.sb.dgb{background:var(--gr);color:#111;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 3px 0 #c9574a}
+.po{display:flex;align-items:center;gap:12px;padding:10px 6px;font-size:17px;font-weight:600}
+.po input{width:22px;height:22px;margin:0;box-shadow:none;accent-color:var(--ac)}
 @media print{header,.foot,.bar2 button,.plus,.chev,.fab{display:none!important}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
@@ -184,7 +211,7 @@ if(!S.labels)S.labels={on:'عليه',fr:'له'};
 var locked=!!S.lock;
 function bl(n){return n>0?S.labels.on:(n<0?S.labels.fr:'')}
 var view='home',openId=null,q='',showSearch=false,modal=null,drawer=false;
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('تعذر الحفظ: المساحة ممتلئة')}}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function fmt(n){return (Math.round(n*100)/100).toString()}
@@ -195,7 +222,7 @@ function sums(list){var on=0,fr=0;list.forEach(function(a){a.entries.forEach(fun
 function toast(t){var d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},1800)}
 function applyTheme(){var r=document.documentElement;if(S.theme==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',S.theme)}
 
-var IC={menu:'M4 6h16M4 12h16M4 18h16',search:'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-4.5-4.5',doc:'M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6',trash:'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6',users:'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2.5 20c.5-3.5 3-5 6.5-5s6 1.5 6.5 5M17 11a3 3 0 1 0 0-6M18 15c2 .3 3.2 1.8 3.5 4',phone:'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z',lock:'M6 11h12v10H6zM8.5 11V8a3.5 3.5 0 0 1 7 0v3',back:'M4 12h15M13 6l6 6-6 6',plus:'M12 5v14M5 12h14',chev:'M6 9l6 6 6-6',book:'M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h11',save:'M5 4h11l3 3v13H5zM8 4v5h7V4M8 20v-7h8v7',share:'M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM18 22a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8.7 10.7l6.6-3.4M8.7 13.3l6.6 3.4',undo:'M9 14L4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3',x:'M6 6l12 12M18 6L6 18',calc:'M6 3h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01'};
+var IC={menu:'M4 6h16M4 12h16M4 18h16',search:'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-4.5-4.5',doc:'M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6',trash:'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6',users:'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2.5 20c.5-3.5 3-5 6.5-5s6 1.5 6.5 5M17 11a3 3 0 1 0 0-6M18 15c2 .3 3.2 1.8 3.5 4',phone:'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z',lock:'M6 11h12v10H6zM8.5 11V8a3.5 3.5 0 0 1 7 0v3',back:'M4 12h15M13 6l6 6-6 6',plus:'M12 5v14M5 12h14',chev:'M6 9l6 6 6-6',book:'M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h11',save:'M5 4h11l3 3v13H5zM8 4v5h7V4M8 20v-7h8v7',share:'M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM18 22a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8.7 10.7l6.6-3.4M8.7 13.3l6.6 3.4',undo:'M9 14L4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3',x:'M6 6l12 12M18 6L6 18',calc:'M6 3h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01',user:'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21c.6-4 4-6 8-6s7.4 2 8 6',camera:'M4 8h3l2-3h6l2 3h3v12H4zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z',kbd:'M3 7h18v10H3zM7 11h.01M11 11h.01M15 11h.01M7 14h10',pencil:'M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4'};
 function ic(n){return '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+IC[n]+'"/></svg>'}
 function render(){
   applyTheme();
@@ -229,7 +256,7 @@ function acc(){
   var run=0,rows=a.entries.slice().sort(function(x,y){return x.date<y.date?-1:1}).map(function(e){
     run+=e.type==='on'?e.amt:-e.amt;return{e:e,r:run}}).reverse().map(function(o){
     var cl=o.e.type==='on'?'o':'f',rc=o.r>0?'o':'f';
-    return '<tr onclick="openEntry(\''+a.id+'\',\''+o.e.id+'\')"><td class="d">'+esc(o.e.date)+'</td><td class="a '+cl+'"><span>'+fmt(o.e.amt)+'</span></td><td class="n">'+esc(o.e.note)+'</td><td class="b '+rc+'"><span>'+fmt(Math.abs(o.r))+'</span></td></tr>'}).join('');
+    return '<tr onclick="openEntry(\''+a.id+'\',\''+o.e.id+'\')"><td class="d">'+esc(o.e.date)+'</td><td class="a '+cl+'"><span>'+fmt(o.e.amt)+'</span></td><td class="n">'+esc(o.e.note)+(o.e.img?' '+ic('camera'):'')+'</td><td class="b '+rc+'"><span>'+fmt(Math.abs(o.r))+'</span></td></tr>'}).join('');
   var t=sums([a]);
   return '<header><button class="ib" aria-label="رجوع" onclick="view=\'home\';render()">'+ic('back')+'</button><h1>'+esc(a.name)+'</h1>'+
    (a.phone?'<a class="ib" aria-label="اتصال" href="tel:'+esc(a.phone)+'" style="text-decoration:none">'+ic('phone')+'</a>':'')+
@@ -298,26 +325,59 @@ function shareReport(){var rep=repData();if(!rep)return;var text=repText(rep),fi
 
 function typeSeg(t){return '<div class="seg"><button class="s-on '+(t==='on'?'sel':'')+'" onclick="setT(\'on\')">'+esc(S.labels.on)+'</button><button class="s-fr '+(t==='fr'?'sel':'')+'" onclick="setT(\'fr\')">'+esc(S.labels.fr)+'</button></div>'}
 function nrm(v){v=String(v).replace(/[\u0660-\u0669]/g,function(d){return d.charCodeAt(0)-1632}).replace(/[\u06F0-\u06F9]/g,function(d){return d.charCodeAt(0)-1776}).replace(/\u066B/g,'.').replace(/[^0-9.]/g,'');var p=v.split('.');return p.length>1?p[0]+'.'+p.slice(1).join(''):v}
-function setT(t){modal.type=t;var b=document.querySelectorAll('.seg button');if(b.length>1){b[0].classList.toggle('sel',t==='on');b[1].classList.toggle('sel',t==='fr')}var a=document.activeElement;if(a&&a.blur)a.blur()}
+function safeImg(u){return /^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+\/=]+$/.test(u||'')?u:''}
+function thumb(m){var u=m.img?safeImg(m.img):'';return u?'<button class="th" aria-label="الصورة" onclick="viewImg()"><img alt="" src="'+u+'"></button>':''}
+function mhead(t){return '<div class="mh"><button class="mhb" aria-label="إغلاق" onclick="modal=null;render()">'+ic('back')+'</button><div class="mt">'+t+'</div><button class="mhb" aria-label="إخفاء لوحة المفاتيح" onclick="if(document.activeElement)document.activeElement.blur()">'+ic('kbd')+'</button></div>'}
+function frow(icon,inner,fn){return '<div class="fr2"><button class="fi" '+(fn?'onclick="'+fn+'"':'tabindex="-1"')+'>'+ic(icon)+'</button>'+inner+'</div>'}
+function rdBar(m,acc){var h='<div class="fbar"><button class="rb on'+(m.type==='on'?' sel':'')+'" data-t="on" onclick="setT(\'on\')"><i></i>'+esc(S.labels.on)+'</button><button class="rb fr'+(m.type==='fr'?' sel':'')+'" data-t="fr" onclick="setT(\'fr\')"><i></i>'+esc(S.labels.fr)+'</button><span style="flex:1"></span>';
+ if(m.eid)h+='<button class="sb dgb" aria-label="حذف" onclick="delEnt()">'+ic('trash')+'</button>';else h+='<button class="sb" aria-label="حفظ وإضافة آخر" onclick="'+(acc?'saveAcc(true)':'saveEnt(true)')+'">'+ic('plus')+'</button>';
+ return h+'<button class="sb" aria-label="حفظ" onclick="'+(acc?'saveAcc()':'saveEnt()')+'">'+ic('save')+'</button></div>'}
+function compressImg(file,cb){var fr=new FileReader();fr.onload=function(){var im=new Image();im.onload=function(){var k=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);cb(c.toDataURL('image/jpeg',0.7))};im.onerror=function(){toast('تعذر قراءة الصورة')};im.src=fr.result};fr.onerror=function(){toast('تعذر قراءة الصورة')};fr.readAsDataURL(file)}
+function openPhoto(){keep();var d=document.createElement('div');d.id='phsel';d.className='ov';d.style.zIndex=55;
+ d.innerHTML='<div class="dlg cm"><div class="mh"><div class="mt">خيارات الصورة</div></div><label class="po"><input type="radio" name="ph" value="cam" checked>الكاميرا</label><label class="po"><input type="radio" name="ph" value="gal">الهاتف</label><div class="acts"><button id="ph_ok">موافق</button><button class="gh" id="ph_no">إلغاء</button></div></div>';
+ document.body.appendChild(d);
+ document.getElementById('ph_no').onclick=function(){d.remove()};
+ document.getElementById('ph_ok').onclick=function(){var v=d.querySelector('input[name=ph]:checked').value;d.remove();
+  var f=document.createElement('input');f.type='file';f.accept='image/*';if(v==='cam')f.setAttribute('capture','environment');f.style.display='none';document.body.appendChild(f);
+  f.onchange=function(){var fl=f.files&&f.files[0];f.remove();if(!fl)return;compressImg(fl,function(u){if(!modal)return;modal.img=u;render();toast('تم إرفاق الصورة')})};f.click()}}
+function viewImg(){var u=modal&&safeImg(modal.img);if(!u)return;var d=document.createElement('div');d.id='ivw';d.className='ov';d.style.zIndex=55;
+ d.innerHTML='<div class="dlg cm" style="text-align:center"><img id="iv_im" alt="" style="max-width:100%;max-height:60vh;border-radius:10px"><div class="acts"><button class="dg" id="iv_del">حذف الصورة</button><button class="gh" id="iv_x">إغلاق</button></div></div>';
+ document.body.appendChild(d);document.getElementById('iv_im').src=u;
+ document.getElementById('iv_x').onclick=function(){d.remove()};
+ document.getElementById('iv_del').onclick=function(){keep();modal.img=null;d.remove();render()}}
+function pickContact(){if(!(navigator.contacts&&navigator.contacts.select)){toast('اختيار جهة اتصال غير مدعوم هنا، اكتب الرقم يدويًا');return}
+ navigator.contacts.select(['name','tel'],{multiple:false}).then(function(r){if(!r||!r.length)return;keep();var c=r[0];if(c.tel&&c.tel[0])modal.f_phone=c.tel[0];if(c.name&&c.name[0]&&!modal.f_name)modal.f_name=c.name[0];render()}).catch(function(){toast('تعذر فتح جهات الاتصال')})}
+function setT(t){modal.type=t;var b=document.querySelectorAll('.rb');for(var i=0;i<b.length;i++)b[i].classList.toggle('sel',b[i].getAttribute('data-t')===t);var a=document.activeElement;if(a&&a.blur)a.blur()}
+function saveAcc(more){keep();var n=(modal.f_name||'').trim(),amt=parseFloat(nrm(modal.f_amt||''));
+ if(!n){toast('اكتب اسم الحساب');return}
+ var a={id:uid(),name:n,phone:(modal.f_phone||'').trim(),cur:modal.f_cur||S.cur,entries:[]};
+ if(amt>0){var e={id:uid(),amt:amt,type:modal.type,date:nowStr(modal.f_date||today()),note:modal.f_note||''};if(modal.img)e.img=modal.img;a.entries.push(e)}
+ S.accounts.push(a);S.cur=a.cur;save();
+ if(more){modal={t:'acc',type:modal.type,f_date:modal.f_date,f_cur:a.cur}}else modal=null;render();toast(more?'تمت الإضافة، أضف حسابًا آخر':'تم الحفظ')}
+function saveEnt(more){keep();var amt=parseFloat(nrm(modal.f_amt||''));if(!(amt>0)){toast('اكتب مبلغًا صحيحًا');return}
+ var a=S.accounts.find(function(x){return x.id===modal.aid});
+ if(modal.eid){var e=a.entries.find(function(x){return x.id===modal.eid});e.amt=amt;e.type=modal.type;e.date=nowStr(modal.f_date);e.note=modal.f_note||'';if(modal.img)e.img=modal.img;else delete e.img}
+ else{var n={id:uid(),amt:amt,type:modal.type,date:nowStr(modal.f_date||today()),note:modal.f_note||''};if(modal.img)n.img=modal.img;a.entries.push(n)}
+ save();if(more&&!modal.eid){modal={t:'ent',aid:modal.aid,type:modal.type,f_date:modal.f_date}}else modal=null;render();toast('تم الحفظ')}
 function keep(){['f_name','f_amt','f_date','f_note','f_phone','f_cur'].forEach(function(i){var el=document.getElementById(i);if(el)modal[i]=el.value})}
 function openAcc(){modal={t:'acc',type:'on',f_date:today(),f_cur:S.cur};render()}
 function openEntry(aid,eid){var a=S.accounts.find(function(x){return x.id===aid});
-  if(eid){var e=a.entries.find(function(x){return x.id===eid});modal={t:'ent',aid:aid,eid:eid,type:e.type,f_amt:e.amt,f_date:e.date.slice(0,10),f_note:e.note}}
+  if(eid){var e=a.entries.find(function(x){return x.id===eid});modal={t:'ent',aid:aid,eid:eid,type:e.type,f_amt:e.amt,f_date:e.date.slice(0,10),f_note:e.note,img:e.img}}
   else modal={t:'ent',aid:aid,type:'on',f_date:today()};render()}
 function modalH(){var m=modal,v=function(k){return esc(m[k]==null?'':m[k])};
-  if(m.t==='acc')return '<div class="ov"><div class="dlg"><h2>إضافة حساب جديد</h2>'+
-   '<label>اسم الحساب</label><input id="f_name" value="'+v('f_name')+'">'+
-   '<label>المبلغ</label><input id="f_amt" type="text" inputmode="decimal" lang="en" dir="ltr" autocomplete="off" oninput="this.value=nrm(this.value)" value="'+v('f_amt')+'">'+
-   '<label>العملة</label><select id="f_cur">'+S.currencies.map(function(c){return '<option'+(c===m.f_cur?' selected':'')+'>'+esc(c)+'</option>'}).join('')+'</select>'+
-   '<label>التاريخ</label><input id="f_date" type="date" value="'+v('f_date')+'">'+
-   '<label>التفاصيل</label><input id="f_note" value="'+v('f_note')+'">'+
-   '<label>رقم الهاتف</label><input id="f_phone" type="tel" value="'+v('f_phone')+'">'+typeSeg(m.type)+
-   '<div class="acts"><button onclick="saveAcc()">حفظ</button><button class="gh" onclick="modal=null;render()">إلغاء</button></div></div></div>';
-  if(m.t==='ent')return '<div class="ov"><div class="dlg"><h2>'+(m.eid?'تعديل القيد':'قيد جديد')+'</h2>'+
-   '<label>المبلغ</label><input id="f_amt" type="text" inputmode="decimal" lang="en" dir="ltr" autocomplete="off" oninput="this.value=nrm(this.value)" value="'+v('f_amt')+'">'+
-   '<label>التاريخ</label><input id="f_date" type="date" value="'+v('f_date')+'">'+
-   '<label>التفاصيل</label><input id="f_note" value="'+v('f_note')+'">'+typeSeg(m.type)+
-   '<div class="acts"><button onclick="saveEnt()">حفظ</button>'+(m.eid?'<button class="dg" onclick="delEnt()">حذف</button>':'')+'<button class="gh" onclick="modal=null;render()">إلغاء</button></div></div></div>';
+  if(m.t==='acc')return '<div class="ov"><div class="dlg cm">'+mhead('إضافة حساب جديد')+
+   frow('user','<input id="f_name" placeholder="إسم الحساب" autocomplete="off" value="'+v('f_name')+'">')+
+   frow('calc','<input id="f_amt" placeholder="المبلغ" type="text" inputmode="decimal" lang="en" dir="ltr" autocomplete="off" oninput="this.value=nrm(this.value)" value="'+v('f_amt')+'">','toggleCalc()')+
+   '<div class="fcur"><span>العملة</span><div class="cpill"><select id="f_cur">'+S.currencies.map(function(c){return '<option'+(c===m.f_cur?' selected':'')+'>'+esc(c)+'</option>'}).join('')+'</select>'+ic('pencil')+'</div></div>'+
+   '<div class="fdate"><input id="f_date" type="date" value="'+v('f_date')+'"></div>'+
+   frow('camera','<input id="f_note" placeholder="التفاصيل" autocomplete="off" value="'+v('f_note')+'">'+thumb(m),'openPhoto()')+
+   frow('user','<input id="f_phone" placeholder="رقم الهاتف" type="tel" dir="ltr" autocomplete="off" value="'+v('f_phone')+'">','pickContact()')+
+   rdBar(m,true)+'</div></div>';
+  if(m.t==='ent')return '<div class="ov"><div class="dlg cm">'+mhead(m.eid?'تعديل القيد':'قيد جديد')+
+   frow('calc','<input id="f_amt" placeholder="المبلغ" type="text" inputmode="decimal" lang="en" dir="ltr" autocomplete="off" oninput="this.value=nrm(this.value)" value="'+v('f_amt')+'">','toggleCalc()')+
+   '<div class="fdate"><input id="f_date" type="date" value="'+v('f_date')+'"></div>'+
+   frow('camera','<input id="f_note" placeholder="التفاصيل" autocomplete="off" value="'+v('f_note')+'">'+thumb(m),'openPhoto()')+
+   rdBar(m,false)+'</div></div>';
   if(m.t==='delacc')return '<div class="ov"><div class="dlg"><h2>حذف الحساب</h2><p style="text-align:center">سينتقل الحساب وكل قيوده إلى سلة المحذوفات ويمكنك استرجاعه. هل تريد المتابعة؟</p><div class="acts"><button class="dg" onclick="delAcc()">نعم، احذف</button><button class="gh" onclick="modal=null;render()">إلغاء</button></div></div></div>';
   if(m.t==='cur')return '<div class="ov"><div class="dlg"><h2>إضافة عملة</h2><label>اسم العملة (مثل: دولار)</label><input id="f_cur"><div class="acts"><button onclick="addCur()">إضافة</button><button class="gh" onclick="modal=null;render()">إلغاء</button></div></div></div>';
   if(m.t==='cursel')return '<div class="ov"><div class="dlg"><h2>اختر العملة</h2>'+S.currencies.map(function(c){return '<button class="chip" style="display:block;width:100%;margin:6px 0;'+(c===S.cur?'':'opacity:.6')+'" onclick="S.cur=\''+esc(c)+'\';save();modal=null;render()">'+esc(c)+'</button>'}).join('')+'<div class="acts"><button class="gh" onclick="modal=null;render()">إغلاق</button></div></div></div>';
@@ -337,16 +397,6 @@ function modalH(){var m=modal,v=function(k){return esc(m[k]==null?'':m[k])};
    '<div class="acts"><button onclick="copyBk()">نسخ</button></div><label>للاسترجاع: الصق النص هنا</label><textarea id="rs" rows="4"></textarea>'+
    '<div class="acts"><button onclick="restore()">استرجاع</button><button class="gh" onclick="modal=null;render()">إغلاق</button></div></div></div>';
 }
-function saveAcc(){keep();var n=(modal.f_name||'').trim(),amt=parseFloat(modal.f_amt);
-  if(!n){toast('اكتب اسم الحساب');return}
-  var a={id:uid(),name:n,phone:(modal.f_phone||'').trim(),cur:modal.f_cur||S.cur,entries:[]};
-  if(amt>0)a.entries.push({id:uid(),amt:amt,type:modal.type,date:nowStr(modal.f_date||today()),note:modal.f_note||''});
-  S.accounts.push(a);S.cur=a.cur;save();modal=null;render();toast('تم الحفظ')}
-function saveEnt(){keep();var amt=parseFloat(modal.f_amt);if(!(amt>0)){toast('اكتب مبلغًا صحيحًا');return}
-  var a=S.accounts.find(function(x){return x.id===modal.aid});
-  if(modal.eid){var e=a.entries.find(function(x){return x.id===modal.eid});e.amt=amt;e.type=modal.type;e.date=nowStr(modal.f_date);e.note=modal.f_note||''}
-  else a.entries.push({id:uid(),amt:amt,type:modal.type,date:nowStr(modal.f_date||today()),note:modal.f_note||''});
-  save();modal=null;render();toast('تم الحفظ')}
 function delEnt(){var a=S.accounts.find(function(x){return x.id===modal.aid});var e=a.entries.find(function(x){return x.id===modal.eid});S.trash.unshift({kind:'ent',accId:a.id,accName:a.name,item:e});a.entries=a.entries.filter(function(x){return x.id!==modal.eid});save();modal=null;render();toast('نُقل إلى سلة المحذوفات')}
 function restoreT(i){var t=S.trash[i];if(t.kind==='acc'){S.accounts.push(t.item)}else{var a=S.accounts.find(function(x){return x.id===t.accId});if(!a){toast('استرجع الحساب أولًا');return}a.entries.push(t.item)}S.trash.splice(i,1);save();render();toast('تم الاسترجاع')}
 function purgeT(i){S.trash.splice(i,1);save();render()}
@@ -487,7 +537,7 @@ document.addEventListener('contextmenu',function(e){if(e.target.closest&&e.targe
 function delAccById(id){var a=S.accounts.find(function(x){return x.id===id});if(a)S.trash.unshift({kind:'acc',item:a});S.accounts=S.accounts.filter(function(x){return x.id!==id});save();modal=null;render();toast('نُقل إلى سلة المحذوفات')}
 render();
 
-var APP_BUILD=3,APP_VER='1.2',UPD_SKIP=0;
+var APP_BUILD=4,APP_VER='1.3',UPD_SKIP=0;
 function checkUpdate(){
  if(!/^https?:$/.test(location.protocol)||document.getElementById('upd'))return;
  fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(v){
