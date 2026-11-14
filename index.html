@@ -196,6 +196,9 @@ table{border-spacing:0 3px}
 .sb.dgb{background:var(--gr);color:#111;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 3px 0 #c9574a}
 .po{display:flex;align-items:center;gap:12px;padding:10px 6px;font-size:17px;font-weight:600}
 .po input{width:22px;height:22px;margin:0;box-shadow:none;accent-color:var(--ac)}
+.cpill{position:relative;height:46px;display:flex;align-items:center;justify-content:center}
+.cpill .cv{font-weight:700;font-size:17px;line-height:1.7;padding:0 40px;white-space:nowrap;text-align:center;overflow:visible}
+.cpill select{position:absolute;inset:0;width:100%;height:100%;margin:0;padding:0;opacity:0;font-size:16px}
 @media print{header,.foot,.bar2 button,.plus,.chev,.fab{display:none!important}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
@@ -368,7 +371,7 @@ function modalH(){var m=modal,v=function(k){return esc(m[k]==null?'':m[k])};
   if(m.t==='acc')return '<div class="ov"><div class="dlg cm">'+mhead('إضافة حساب جديد')+
    frow('user','<input id="f_name" placeholder="إسم الحساب" autocomplete="off" value="'+v('f_name')+'">')+
    frow('calc','<input id="f_amt" placeholder="المبلغ" type="text" inputmode="decimal" lang="en" dir="ltr" autocomplete="off" oninput="this.value=nrm(this.value)" value="'+v('f_amt')+'">','toggleCalc()')+
-   '<div class="fcur"><span>العملة</span><div class="cpill"><select id="f_cur">'+S.currencies.map(function(c){return '<option'+(c===m.f_cur?' selected':'')+'>'+esc(c)+'</option>'}).join('')+'</select>'+ic('pencil')+'</div></div>'+
+   '<div class="fcur"><span>العملة</span><div class="cpill"><div class="cv">'+esc(m.f_cur||S.cur)+'</div><select id="f_cur" onchange="this.previousSibling.textContent=this.value">'+S.currencies.map(function(c){return '<option'+(c===m.f_cur?' selected':'')+'>'+esc(c)+'</option>'}).join('')+'</select>'+ic('pencil')+'</div></div>'+
    '<div class="fdate"><input id="f_date" type="date" value="'+v('f_date')+'"></div>'+
    frow('camera','<input id="f_note" placeholder="التفاصيل" autocomplete="off" value="'+v('f_note')+'">'+thumb(m),'openPhoto()')+
    frow('user','<input id="f_phone" placeholder="رقم الهاتف" type="tel" dir="ltr" autocomplete="off" value="'+v('f_phone')+'">','pickContact()')+
@@ -537,7 +540,7 @@ document.addEventListener('contextmenu',function(e){if(e.target.closest&&e.targe
 function delAccById(id){var a=S.accounts.find(function(x){return x.id===id});if(a)S.trash.unshift({kind:'acc',item:a});S.accounts=S.accounts.filter(function(x){return x.id!==id});save();modal=null;render();toast('نُقل إلى سلة المحذوفات')}
 render();
 
-var APP_BUILD=4,APP_VER='1.3',UPD_SKIP=0;
+var APP_BUILD=5,APP_VER='1.3.1',UPD_SKIP=0;
 function checkUpdate(){
  if(!/^https?:$/.test(location.protocol)||document.getElementById('upd'))return;
  fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(v){
