@@ -199,6 +199,44 @@ table{border-spacing:0 3px}
 .cpill{position:relative;height:46px;display:flex;align-items:center;justify-content:center}
 .cpill .cv{font-weight:700;font-size:17px;line-height:1.7;padding:0 40px;white-space:nowrap;text-align:center;overflow:visible}
 .cpill select{position:absolute;inset:0;width:100%;height:100%;margin:0;padding:0;opacity:0;font-size:16px}
+.dov{animation:fIn .25s ease both}
+.drawer{width:min(86vw,340px);background:var(--bg);overflow-y:auto;overscroll-behavior:contain;padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));animation:dIn .3s cubic-bezier(.2,.8,.2,1) both}
+@keyframes dIn{from{transform:translateX(100%)}to{transform:none}}
+@keyframes fIn{from{opacity:0}to{opacity:1}}
+.drawer .hd{display:flex;align-items:center;gap:12px;padding:calc(env(safe-area-inset-top,0px) + 22px) 14px 20px;font-size:inherit}
+.hl{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 3px 8px -2px rgba(0,0,0,.3);flex:none}
+.hl .ic{width:26px;height:26px}
+.ht{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.ht b{font-size:19px}.ht small{font-size:12px;opacity:.85}
+.drawer .hx{width:36px;height:36px;border-radius:50%;padding:0;border:0;display:grid;place-items:center;background:rgba(255,255,255,.18);color:#fff;flex:none;transition:background .15s}
+.drawer .hx:active{background:rgba(255,255,255,.34)}
+.hx .ic{width:20px;height:20px}
+.mg{margin:16px 12px 0}
+.ms{font-size:12px;font-weight:700;color:var(--mu);padding:0 8px 8px}
+.mc{background:var(--card);border-radius:16px;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 0 rgba(0,0,0,.1),0 10px 18px -12px rgba(10,40,70,.45)}
+.drawer .mi{display:flex;align-items:center;gap:12px;width:100%;min-height:62px;padding:12px 14px;border:0;border-bottom:0;text-align:start;font-size:16px;transition:background .15s}
+.drawer .mi+.mi{border-top:1px solid var(--ln)}
+.drawer .mi:active{background:rgba(0,168,232,.12)}
+.ri{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:rgba(0,168,232,.14);color:var(--ac);flex:none;transition:transform .15s}
+.mi:active .ri{transform:scale(.9)}
+.ri .ic{width:20px;height:20px}
+.mx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.mx b{font-weight:600;font-size:16px}
+.mx small{font-size:12px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mch{color:var(--mu);display:grid;place-items:center;flex:none}.mch .ic{width:20px;height:20px}
+.sw{position:relative;width:48px;height:28px;border-radius:14px;background:var(--ln);flex:none;transition:background .25s;box-shadow:inset 0 2px 4px rgba(0,0,0,.2)}
+.sw i{position:absolute;top:3px;inset-inline-start:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.35);transition:inset-inline-start .25s cubic-bezier(.3,.9,.4,1)}
+.sw.on{background:var(--bar)}.sw.on i{inset-inline-start:23px}
+@media (prefers-reduced-motion:reduce){.drawer,.dov{animation:none}.sw,.sw i,.drawer .mi,.ri{transition:none}}
+html{--vvh:100%;--vvt:0px}
+.ov{inset:auto;left:0;right:0;top:var(--vvt,0px);height:var(--vvh,100%)}
+.dlg{max-height:calc(var(--vvh,100vh) - 16px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+html.kb .ov{align-items:flex-start;padding-top:8px;padding-bottom:8px}
+html.kb .dlg.cm{padding:8px}
+html.kb .cm .mh{margin-bottom:4px}
+html.kb .fr2,html.kb .fcur{margin:4px 0}
+html.kb .fr2 input,html.kb .fdate input,html.kb .cpill{height:38px}
+.lockscr{inset:auto;left:0;right:0;top:var(--vvt,0px);height:var(--vvh,100%);overflow-y:auto}
+html.kb .lockscr{justify-content:flex-start;padding-top:16px}
 @media print{header,.foot,.bar2 button,.plus,.chev,.fab{display:none!important}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
@@ -466,16 +504,41 @@ function setLock(){var c=document.getElementById('f_pw0'),n=document.getElementB
 function removeLock(){var c=document.getElementById('f_pw0');hashPw(c?c.value:'',S.lock.salt).then(function(h){if(h!==S.lock.hash){toast('كلمة المرور الحالية غير صحيحة');return}delete S.lock;save();modal=null;render();toast('تم إلغاء القفل')})}
 function saveSet(){var a=document.getElementById('f_lon').value.trim(),b=document.getElementById('f_lfr').value.trim();if(!a||!b){toast('اكتب العبارتين');return}if(a===b){toast('يجب أن تختلف العبارتان');return}S.labels={on:a,fr:b};save();modal=null;render();toast('تم الحفظ')}
 function resetSet(){S.labels={on:'عليه',fr:'له'};save();modal=null;render()}
-function drawerH(){return '<div class="ov" style="justify-content:flex-start;padding:0" onclick="drawer=false;render()"></div><div class="drawer"><div class="hd">دفتر الحسابات</div>'+
-  '<button onclick="drawer=false;modal={t:\'cursel\'};render()">تغيير العملة</button>'+
-  '<button onclick="drawer=false;modal={t:\'cur\'};render()">إضافة عملة</button>'+
-  '<button onclick="drawer=false;render();exportJson()">تصدير البيانات (ملف JSON)</button>'+
-  '<button onclick="drawer=false;modal={t:\'imp\'};render()">استيراد البيانات (ملف JSON)</button>'+
-  '<button onclick="drawer=false;modal={t:\'lock\'};render()">'+(S.lock?'قفل التطبيق (مفعّل)':'قفل التطبيق')+'</button>'+
-  
-  '<button onclick="drawer=false;modal={t:\'set\'};render()">الإعدادات</button>'+
-  '<button onclick="drawer=false;modal={t:\'about\'};render()">حول التطبيق</button>'+
-  '<button onclick="S.theme=S.theme===\'dark\'?\'light\':\'dark\';save();drawer=false;render()">تبديل المظهر الليلي</button></div>'}
+IC.m_cur='M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM14.6 9.3c-.5-.8-1.4-1.3-2.6-1.3-1.5 0-2.6.8-2.6 1.9 0 2.6 5.2 1.3 5.2 3.9 0 1.1-1.1 1.9-2.6 1.9-1.2 0-2.2-.5-2.7-1.4M12 6v2m0 8v2';
+IC.m_add='M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 8v8M8 12h8';
+IC.m_set='M4 7h9M17 7h3M4 17h3M11 17h9M15 5v4M9 15v4';
+IC.m_moon='M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z';
+IC.m_exp='M12 15V4M8 8l4-4 4 4M5 14v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5';
+IC.m_imp='M12 4v11M8 11l4 4 4-4M5 14v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5';
+IC.m_info='M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v6M12 7.5h.01';
+IC.m_chev='M15 6l-6 6 6 6';
+function isDarkNow(){return S.theme==='dark'||((S.theme==null||S.theme==='auto')&&!!(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches))}
+function toggleTheme(el){S.theme=isDarkNow()?'light':'dark';save();applyTheme();var on=isDarkNow();el.setAttribute('aria-checked',on);var sw=el.querySelector('.sw');if(sw)sw.classList.toggle('on',on)}
+function mrow(ico,label,sub,act,tail,extra){return '<button class="mi" onclick="'+act+'"'+(extra||'')+'><span class="ri">'+ic(ico)+'</span><span class="mx"><b>'+label+'</b>'+(sub?'<small>'+sub+'</small>':'')+'</span>'+tail+'</button>'}
+(function(){var H=document.documentElement,V=window.visualViewport;
+ function sync(){var h=V?V.height:window.innerHeight,t=V?V.offsetTop:0;H.style.setProperty('--vvh',h+'px');H.style.setProperty('--vvt',t+'px')}
+ function isF(e){return !!(e&&e.matches&&e.matches('input,textarea,select'))}
+ document.addEventListener('focusin',function(e){if(isF(e.target)){H.classList.add('kb');sync();var el=e.target;setTimeout(function(){sync();try{el.scrollIntoView({block:'center',behavior:'smooth'})}catch(x){}},320)}});
+ document.addEventListener('focusout',function(){setTimeout(function(){if(!isF(document.activeElement)){H.classList.remove('kb');sync()}},120)});
+ if(V){V.addEventListener('resize',sync);V.addEventListener('scroll',sync)}
+ window.addEventListener('resize',sync);window.addEventListener('orientationchange',sync);sync()})();
+function drawerH(){
+ var ver=(typeof APP_VER!=='undefined')?'الإصدار '+APP_VER:'',dk=isDarkNow(),lk=!!S.lock,chev='<span class="mch">'+ic('m_chev')+'</span>',
+ sw=function(on){return '<span class="sw'+(on?' on':'')+'"><i></i></span>'},
+ go=function(m){return "drawer=false;modal={t:'"+m+"'};render()"};
+ return '<div class="ov dov" style="justify-content:flex-start;padding:0" onclick="drawer=false;render()"></div><div class="drawer" role="dialog" aria-label="القائمة">'+
+ '<div class="hd"><span class="hl">'+ic('book')+'</span><span class="ht"><b>دفتر الحسابات</b>'+(ver?'<small>'+ver+'</small>':'')+'</span><button class="hx" aria-label="إغلاق" onclick="drawer=false;render()">'+ic('x')+'</button></div>'+
+ '<div class="mg"><div class="ms">الحسابات والعملات</div><div class="mc">'+
+  mrow('m_cur','تغيير العملة','العملة الحالية: '+esc(S.cur),go('cursel'),chev)+
+  mrow('m_add','إضافة عملة','أضف عملة جديدة للحسابات',go('cur'),chev)+
+  mrow('m_set','الإعدادات','عبارتا المدين والدائن: '+esc(S.labels.on)+' / '+esc(S.labels.fr),go('set'),chev)+'</div></div>'+
+ '<div class="mg"><div class="ms">الأمان والمظهر</div><div class="mc">'+
+  mrow('lock','قفل التطبيق',lk?'مفعّل':'غير مفعّل',go('lock'),sw(lk),' role="switch" aria-checked="'+lk+'"')+
+  mrow('m_moon','المظهر الليلي','التبديل بين الفاتح والداكن','toggleTheme(this)',sw(dk),' role="switch" aria-checked="'+dk+'"')+'</div></div>'+
+ '<div class="mg"><div class="ms">البيانات</div><div class="mc">'+
+  mrow('m_exp','تصدير البيانات','حفظ نسخة بصيغة JSON','drawer=false;render();exportJson()',chev)+
+  mrow('m_imp','استيراد البيانات','استرجاع من ملف JSON',go('imp'),chev)+'</div></div>'+
+ '<div class="mg"><div class="ms">معلومات</div><div class="mc">'+mrow('m_info','حول التطبيق',ver,go('about'),chev)+'</div></div></div>'}
 function D(str){var neg=false;str=String(str).trim();if(str.charAt(0)==='-'){neg=true;str=str.slice(1)}var p=str.split('.'),i=p[0]||'0',f=p[1]||'';var n=BigInt(i+f);return{n:neg?-n:n,s:f.length}}
 function dNorm(a){while(a.s>0&&a.n%10n===0n){a.n/=10n;a.s--}return a}
 function dAl(a,b){var s=Math.max(a.s,b.s);return[a.n*10n**BigInt(s-a.s),b.n*10n**BigInt(s-b.s),s]}
@@ -540,7 +603,7 @@ document.addEventListener('contextmenu',function(e){if(e.target.closest&&e.targe
 function delAccById(id){var a=S.accounts.find(function(x){return x.id===id});if(a)S.trash.unshift({kind:'acc',item:a});S.accounts=S.accounts.filter(function(x){return x.id!==id});save();modal=null;render();toast('نُقل إلى سلة المحذوفات')}
 render();
 
-var APP_BUILD=5,APP_VER='1.3.1',UPD_SKIP=0;
+var APP_BUILD=7,APP_VER='1.4.1',UPD_SKIP=0;
 function checkUpdate(){
  if(!/^https?:$/.test(location.protocol)||document.getElementById('upd'))return;
  fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(v){
