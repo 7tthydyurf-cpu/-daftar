@@ -233,6 +233,14 @@ html{--vvh:100%;--vvt:0px}
 html.kb .foot{visibility:hidden}
 .lockscr{inset:auto;left:0;right:0;top:var(--vvt,0px);height:var(--vvh,100%);overflow-y:auto}
 html.kb .lockscr{justify-content:flex-start;padding-top:16px}
+.toast{z-index:300}
+.lkerr{color:#d32f2f;font-weight:700;font-size:14px;text-align:center;line-height:1.6}
+.lkerr:empty{display:none}
+:root[data-theme="dark"] .lkerr{color:#ff5a5a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lkerr{color:#ff5a5a}}
+.lkerr.shake{animation:shk .35s}
+@keyframes shk{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.lkcard input.bad{border-color:#ff5a5a;box-shadow:inset 0 2px 5px rgba(0,0,0,.15),0 0 0 2px rgba(255,90,90,.35)}
 @media print{header,.foot,.bar2 button,.plus,.chev,.fab{display:none!important}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
@@ -465,31 +473,33 @@ function newRecovery(cb){var code=genCode(),salt=uid();hashPw(nrmCode(code),salt
 function showCode(code){modal={t:'rc',code:code};render()}
 function copyCode(){var t=document.createElement('textarea');t.value=modal.code;document.body.appendChild(t);t.select();try{document.execCommand('copy');toast('تم نسخ الكود')}catch(e){toast('تعذر النسخ')}t.remove()}
 function newCodeNow(){var c=document.getElementById('f_pw0');hashPw(c?c.value:'',S.lock.salt).then(function(h){if(h!==S.lock.hash){toast('اكتب كلمة المرور الحالية أولًا');return}newRecovery(function(code){showCode(code)})})}
-function pwOK(a,b){if(a.length<4){toast('كلمة المرور 4 أحرف على الأقل');return false}if(a!==b){toast('كلمتا المرور غير متطابقتين');return false}return true}
+function pwOK(a,b){if(a.length<4){lm('كلمة المرور 4 أحرف على الأقل');return false}if(a!==b){lm('كلمتا المرور غير متطابقتين');return false}return true}
 function resetPw(n){var salt=uid();hashPw(n,salt).then(function(h){S.lock.salt=salt;S.lock.hash=h;delete S.lock.wait;newRecovery(function(code){locked=false;LK.mode='login';render();showCode(code)})})}
 function recoverByCode(){var code=nrmCode(document.getElementById('rc').value),n=document.getElementById('rp1').value,n2=document.getElementById('rp2').value;
- if(!code){toast('اكتب كود الاسترجاع');return}if(!pwOK(n,n2))return;
- hashPw(code,S.lock.rs||'').then(function(h){if(!S.lock.rh||h!==S.lock.rh){toast('كود الاسترجاع غير صحيح');return}resetPw(n)})}
+ if(!code){lockErr('اكتب كود الاسترجاع');return}if(!pwOK(n,n2))return;
+ hashPw(code,S.lock.rs||'').then(function(h){if(!S.lock.rh||h!==S.lock.rh){lockErr('كود الاسترجاع غير صحيح');return}resetPw(n)})}
 function recoverByWait(){var n=document.getElementById('rp1').value,n2=document.getElementById('rp2').value;
- if(!S.lock.wait||Date.now()-S.lock.wait<864e5){toast('لم تنتهِ فترة الانتظار بعد');render();return}if(!pwOK(n,n2))return;resetPw(n)}
+ if(!S.lock.wait||Date.now()-S.lock.wait<864e5){render();lockErr('لم تنتهِ فترة الانتظار بعد');return}if(!pwOK(n,n2))return;resetPw(n)}
+function lockErr(m){var e=document.getElementById('lkerr');if(!e){toast(m);return}e.textContent=m;e.classList.remove('shake');void e.offsetWidth;e.classList.add('shake');var i=document.getElementById('lp')||document.getElementById('rc')||document.getElementById('rp1');if(i){i.classList.add('bad');i.oninput=function(){i.classList.remove('bad');e.textContent=''}}}
+function lm(m){if(locked)lockErr(m);else toast(m)}
 function startWait(){S.lock.wait=Date.now();save();render();toast('بدأت فترة الانتظار')}
 function lockH(){
  var L=S.lock||{},h='<div class="lockscr"><div class="lkcard">';
  if(LK.mode==='login'){
-  h+='<div style="font-size:48px;text-align:center">'+ic('lock')+'</div><h2 class="lkh">دفتر الحسابات</h2><input id="lp" type="password" placeholder="كلمة المرور" onkeydown="if(event.key===\'Enter\')unlock()"><div class="acts"><button onclick="unlock()">فتح</button></div><button class="lklink" onclick="LK.mode=\'recover\';render()">نسيت كلمة المرور؟</button>'}
+  h+='<div style="font-size:48px;text-align:center">'+ic('lock')+'</div><h2 class="lkh">دفتر الحسابات</h2><input id="lp" type="password" placeholder="كلمة المرور" onkeydown="if(event.key===\'Enter\')unlock()"><div id="lkerr" class="lkerr" role="alert" aria-live="polite"></div><div class="acts"><button onclick="unlock()">فتح</button></div><button class="lklink" onclick="LK.mode=\'recover\';render()">نسيت كلمة المرور؟</button>'}
  else{
   var left=L.wait?L.wait+864e5-Date.now():0,ready=!!L.wait&&left<=0;
   h+='<h2 class="lkh">استعادة الدخول</h2>';
   if(!ready){
-   h+='<p class="lkp">اكتب كود الاسترجاع وكلمة مرور جديدة. لن يُحذف أي شيء من بياناتك.</p><input id="rc" placeholder="كود الاسترجاع" dir="ltr" autocapitalize="characters" autocomplete="off"><input id="rp1" type="password" placeholder="كلمة المرور الجديدة"><input id="rp2" type="password" placeholder="أعد كتابة الجديدة"><div class="acts"><button onclick="recoverByCode()">استعادة الدخول</button></div><hr class="lkhr">';
+   h+='<p class="lkp">اكتب كود الاسترجاع وكلمة مرور جديدة. لن يُحذف أي شيء من بياناتك.</p><input id="rc" placeholder="كود الاسترجاع" dir="ltr" autocapitalize="characters" autocomplete="off"><input id="rp1" type="password" placeholder="كلمة المرور الجديدة"><input id="rp2" type="password" placeholder="أعد كتابة الجديدة"><div id="lkerr" class="lkerr" role="alert" aria-live="polite"></div><div class="acts"><button onclick="recoverByCode()">استعادة الدخول</button></div><hr class="lkhr">';
    if(L.wait){var hh=Math.floor(left/36e5),mm=Math.ceil((left%36e5)/6e4);h+='<p class="lkp">بدأت فترة الانتظار. يمكنك إعادة تعيين كلمة المرور بعد '+hh+' ساعة و'+mm+' دقيقة تقريبًا.</p>'}
    else h+='<p class="lkp">ضيّعت الكود أيضًا؟ يمكنك استعادة الدخول بعد فترة انتظار 24 ساعة، ولن يُحذف أي شيء من بياناتك.</p><div class="acts"><button class="gh" onclick="startWait()">ابدأ فترة الانتظار</button></div>'}
-  else h+='<p class="lkp">انتهت فترة الانتظار. اكتب كلمة مرور جديدة.</p><input id="rp1" type="password" placeholder="كلمة المرور الجديدة"><input id="rp2" type="password" placeholder="أعد كتابة الجديدة"><div class="acts"><button onclick="recoverByWait()">إعادة تعيين كلمة المرور</button></div>';
+  else h+='<p class="lkp">انتهت فترة الانتظار. اكتب كلمة مرور جديدة.</p><input id="rp1" type="password" placeholder="كلمة المرور الجديدة"><input id="rp2" type="password" placeholder="أعد كتابة الجديدة"><div id="lkerr" class="lkerr" role="alert" aria-live="polite"></div><div class="acts"><button onclick="recoverByWait()">إعادة تعيين كلمة المرور</button></div>';
   h+='<div class="acts"><button class="gh" onclick="LK.mode=\'login\';render()">رجوع</button></div>'}
  return h+'</div></div>'}
 function unlock(){var v=document.getElementById('lp').value;hashPw(v,S.lock.salt).then(function(h){
  if(h===S.lock.hash){locked=false;LK.mode='login';if(S.lock.wait){delete S.lock.wait;save()}render();if(!S.lock.rh){newRecovery(function(code){showCode(code)})}}
- else{toast('كلمة المرور غير صحيحة')}})}
+ else{lockErr('كلمة المرور خاطئة');var lp=document.getElementById('lp');if(lp){lp.value='';lp.focus()}}})}
 function lockNow(){modal=null;locked=true;render()}
 function setLock(){var c=document.getElementById('f_pw0'),n=document.getElementById('f_pw1').value,n2=document.getElementById('f_pw2').value;
  function go2(){if(!pwOK(n,n2))return;var salt=uid(),old=S.lock;hashPw(n,salt).then(function(h){
@@ -599,7 +609,7 @@ document.addEventListener('contextmenu',function(e){if(e.target.closest&&e.targe
 function delAccById(id){var a=S.accounts.find(function(x){return x.id===id});if(a)S.trash.unshift({kind:'acc',item:a});S.accounts=S.accounts.filter(function(x){return x.id!==id});save();modal=null;render();toast('نُقل إلى سلة المحذوفات')}
 render();
 
-var APP_BUILD=8,APP_VER='1.4.2',UPD_SKIP=0;
+var APP_BUILD=9,APP_VER='1.4.3',UPD_SKIP=0;
 function checkUpdate(){
  if(!/^https?:$/.test(location.protocol)||document.getElementById('upd'))return;
  fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(v){
